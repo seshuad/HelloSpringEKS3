@@ -1,5 +1,5 @@
 ### Hello 
-Example project deploying a Spring Boot applications to AWS EKS 
+Modified HelloSpringEKS at https://github.com/spjenk/HelloSpringEKS with a Book Microservice using PostgresQL as the backing store
 
 ## Prerequisities 
 * Java 8 / maven etc
@@ -25,16 +25,17 @@ mvn install
 * checked BOOT-INF AND META-INF now exsit under target/dependency/
 * build docker container 
 ```
- docker build -t spjenk/hello .
+ docker build -t seshuad/helloeks3 .
 ```
 * run docker container 
 ```
-docker container run --name hello -p 8080:8080 -d spjenk/hello
+docker container run --name helloeks3 -p 8080:8080 -d seshuad/helloeks3
 curl http://localhost:8080/hello
+curl http://localhost:8080/books
 ```
 * push to dockerhub
 ```
-docker push spjenk/hello:latest
+docker push seshuad/helloeks3:latest
 ```
 
 ## Add Kubernetes 
@@ -51,9 +52,9 @@ helm create chart
 * Updated chart 'values' YAMl file with the following 
 ```
 image:
-  repository: spjenk/hello
+  repository: seshuad/helloeks3
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 ```
 ```
 service:
@@ -62,7 +63,7 @@ service:
 ```
 * deploy
 ```
-helm install --name hello chart
+helm install --name helloeks3 chart
 ```
 * get the external ip address (may take a minute)
 ```
@@ -74,7 +75,7 @@ kubectl get pods
 ```
 * Remove the application once finished testing (e.g. localhosst:8080/hello)
 ```
-helm delete --purge hello
+helm delete --purge helloeks3
 ```
 
 ## Deploy to AWS EKS
